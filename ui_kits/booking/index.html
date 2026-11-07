@@ -1,0 +1,36 @@
+<!-- @dsCard group="Booking page" viewport="600x900" name="Pickup booking flow" subtitle="Customer: shop + item → date/time → details → confirm" -->
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>นัดรับสินค้า — Nadmai</title>
+<link rel="stylesheet" href="../../styles.css"><script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<script src="data.js"></script>
+<script type="text/babel" src="BookingShell.jsx"></script><script type="text/babel" src="ShopStep.jsx"></script><script type="text/babel" src="DateTimeStep.jsx"></script><script type="text/babel" src="DetailsStep.jsx"></script><script type="text/babel" src="ReviewStep.jsx"></script><script type="text/babel" src="ConfirmedStep.jsx"></script>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const {Button}=window.NadmaiDesignSystem_0c4e36;
+function App(){
+  const [step,setStep]=React.useState(0);
+  const [shopId,setShopId]=React.useState('bake');const [item,setItem]=React.useState('');const [order,setOrder]=React.useState('');
+  const [date,setDate]=React.useState('2026-11-14');const [time,setTime]=React.useState(null);
+  const [form,setForm]=React.useState({name:'มาลี กิตติ',phone:'081-234-5678',email:'malee.k@gmail.com',note:'',gcal:true,remind:'30 นาที',terms:true});
+  const [busy,setBusy]=React.useState(false);const [code,setCode]=React.useState('');
+  const shop=window.BK_DATA.shops.find(s=>s.id===shopId);
+  const P={shop,item:item.trim()||'สินค้า',order:order.trim()};
+  const canNext=[!!(shopId&&item.trim()),!!(date&&time),!!(form.name&&form.phone&&form.terms),true][step];
+  const next=()=>{if(step===3){setBusy(true);const c=String(Math.floor(1000+Math.random()*9000));setTimeout(()=>{setBusy(false);setCode(c);setStep(4);
+    if(window.parent!==window)window.parent.postMessage({type:'nm-booked',shopId,shop:shop.title,item:P.item,order:P.order,mins:window.BK_DATA.windowMins,color:shop.color,date,time,name:form.name,phone:form.phone,email:form.email,gcal:form.gcal,code:c},'*');},900);}
+    else setStep(step+1);window.scrollTo(0,0);};
+  const summary=<div style={{flex:1,minWidth:0}}><div style={{font:'var(--type-label)',color:'var(--text-strong)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{item.trim()||shop.title}</div><div style={{font:'var(--type-caption)',color:'var(--text-subtle)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{date&&time?window.BK_FMT(date).split(' ').slice(0,3).join(' ')+' '+time:shop.title}</div></div>;
+  const footer=step<4&&<>{step>0?<Button variant="secondary" iconLeft="arrow-left" onClick={()=>setStep(step-1)}>ย้อนกลับ</Button>:null}{summary}
+    <Button size="lg" disabled={!canNext} loading={busy} iconRight={step<3?'arrow-right':undefined} iconLeft={step===3&&!busy?'calendar-check':undefined} onClick={next}>{step===3?'ยืนยันนัดรับ':'ถัดไป'}</Button></>;
+  return <BookingShell step={step} shop={step>0?shop:null} footer={footer}>
+    {step===0&&<ShopStep shop={shopId} onShop={setShopId} item={item} onItem={setItem} order={order} onOrder={setOrder}/>}
+    {step===1&&<DateTimeStep date={date} time={time} onDate={setDate} onTime={setTime}/>}
+    {step===2&&<DetailsStep form={form} setForm={setForm}/>}
+    {step===3&&<ReviewStep p={P} date={date} time={time} form={form} onEdit={()=>setStep(1)}/>}
+    {step===4&&<ConfirmedStep p={P} date={date} time={time} form={form} code={code} onRestart={()=>{setStep(0);setTime(null);setItem('');setOrder('');}}/>}
+  </BookingShell>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script></body></html>

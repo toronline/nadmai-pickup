@@ -1,0 +1,61 @@
+:root{
+/* Teal — primary brand */
+--teal-50:#EEF7F6;--teal-100:#D3ECE9;--teal-200:#A6D7D2;--teal-300:#6DBBB4;--teal-400:#379A93;--teal-500:#137C76;--teal-600:#0B6560;--teal-700:#0A514D;--teal-800:#0B3F3C;--teal-900:#0A2E2C;
+/* Marigold — accent (today, highlights, "new") */
+--marigold-50:#FDF6E8;--marigold-100:#FAE8C2;--marigold-300:#F2C46B;--marigold-500:#E09A2A;--marigold-600:#B9771A;--marigold-700:#8A5715;
+/* Stone — warm neutrals */
+--stone-0:#FFFFFF;--stone-25:#FBFAF7;--stone-50:#F6F4EF;--stone-100:#ECE9E2;--stone-200:#DDD9CF;--stone-300:#C4BFB3;--stone-400:#9C978B;--stone-500:#77736A;--stone-600:#5A5750;--stone-700:#3F3D38;--stone-800:#2A2925;--stone-900:#1A1917;
+/* Semantic */
+--green-50:#ECF6EF;--green-500:#2E7D4F;--green-700:#1F5A38;
+--amber-50:#FDF3E2;--amber-500:#B7791F;--amber-700:#7F5313;
+--red-50:#FBEDEA;--red-500:#C2412D;--red-700:#8E2D1F;
+--blue-50:#EBF2FB;--blue-500:#2F6DB5;--blue-700:#1F4C82;
+/* Event / service category hues */
+--event-teal:#137C76;--event-marigold:#E09A2A;--event-rose:#C45B74;--event-indigo:#4F5DA8;--event-olive:#6E7F2E;--event-clay:#B4603A;
+
+/* Semantic aliases */
+--bg-app:var(--stone-50);
+--surface-card:var(--stone-0);
+--surface-sunken:var(--stone-100);
+--surface-raised:var(--stone-0);
+--surface-inverse:var(--stone-900);
+--surface-brand:var(--teal-600);
+--surface-brand-soft:var(--teal-50);
+--surface-accent-soft:var(--marigold-50);
+
+--text-strong:var(--stone-900);
+--text-body:var(--stone-800);
+--text-muted:var(--stone-600);
+--text-subtle:var(--stone-500);
+--text-disabled:var(--stone-400);
+--text-inverse:var(--stone-0);
+--text-brand:var(--teal-600);
+--text-on-brand:#FFFFFF;
+--text-link:var(--teal-600);
+--text-link-hover:var(--teal-800);
+
+--border-subtle:var(--stone-100);
+--border-default:var(--stone-200);
+--border-strong:var(--stone-300);
+--border-focus:var(--teal-500);
+--border-brand:var(--teal-500);
+
+--action-primary:var(--teal-600);
+--action-primary-hover:var(--teal-700);
+--action-primary-press:var(--teal-800);
+--action-secondary:var(--stone-0);
+--action-secondary-hover:var(--stone-50);
+--action-ghost-hover:var(--stone-100);
+--action-danger:var(--red-500);
+--action-danger-hover:var(--red-700);
+
+--status-success:var(--green-500);--status-success-soft:var(--green-50);--status-success-ink:var(--green-700);
+--status-warning:var(--amber-500);--status-warning-soft:var(--amber-50);--status-warning-ink:var(--amber-700);
+--status-danger:var(--red-500);--status-danger-soft:var(--red-50);--status-danger-ink:var(--red-700);
+--status-info:var(--blue-500);--status-info-soft:var(--blue-50);--status-info-ink:var(--blue-700);
+
+--slot-available:var(--stone-0);
+--slot-selected:var(--teal-600);
+--slot-unavailable:var(--stone-100);
+--today:var(--marigold-500);
+}

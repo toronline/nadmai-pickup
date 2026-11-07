@@ -1,0 +1,8 @@
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:var(--type-body);color:var(--text-body);background:var(--bg-app);-webkit-font-smoothing:antialiased}
+a{color:var(--text-link);text-decoration:none}
+a:hover{color:var(--text-link-hover);text-decoration:underline}
+:focus-visible{outline:none;box-shadow:var(--focus-ring)}
+::selection{background:var(--teal-100)}
+@keyframes nm-fade-up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes nm-fade{from{opacity:0}to{opacity:1}}

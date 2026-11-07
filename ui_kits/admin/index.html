@@ -1,0 +1,48 @@
+<!-- @dsCard group="Admin dashboard" viewport="1280x800" name="Pickup dashboard" subtitle="Multi-shop pickup calendar, pickup list, Google Calendar settings" -->
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><title>แดชบอร์ดนัดรับสินค้า — Nadmai</title>
+<link rel="stylesheet" href="../../styles.css"><script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<script src="data.js"></script>
+<script type="text/babel" src="Sidebar.jsx"></script><script type="text/babel" src="WeekCalendar.jsx"></script><script type="text/babel" src="CalendarScreen.jsx"></script><script type="text/babel" src="ListScreen.jsx"></script><script type="text/babel" src="SettingsScreen.jsx"></script><script type="text/babel" src="AppointmentDialog.jsx"></script>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const {Toast,Dialog,Button,Select,Input}=window.NadmaiDesignSystem_0c4e36;const D=window.AD_DATA;
+function Placeholder({title}){return <div><TopBar title={title}/><div style={{padding:60,textAlign:'center',font:'var(--type-body-sm)',color:'var(--text-subtle)'}}>หน้านี้ยังไม่อยู่ในชุด UI kit</div></div>;}
+function App(){
+  const [route,setRoute]=React.useState('calendar');
+  const [appts,setAppts]=React.useState(D.appts);
+  const [open,setOpen]=React.useState(null);const [newOpen,setNewOpen]=React.useState(false);
+  const [toast,setToast]=React.useState(null);const [sync,setSync]=React.useState('connected');
+  const [nf,setNf]=React.useState({name:'',item:'',shop:'bake',day:'2',time:'15:00'});
+  React.useEffect(()=>{if(!toast)return;const t=setTimeout(()=>setToast(null),3500);return()=>clearTimeout(t);},[toast]);
+  React.useEffect(()=>{const h=e=>{const m=e.data;if(!m||m.type!=='nm-booked')return;const day=D.week.findIndex(w=>w.iso===m.date);
+    if(day>=0)setAppts(p=>[...p.map(x=>({...x,isNew:false})),{id:Date.now(),day,start:m.time,mins:m.mins,item:m.item,order:m.order,shop:m.shopId,customer:m.name||'ลูกค้าใหม่',status:'pending',synced:true,phone:m.phone,email:m.email,code:m.code,isNew:true}]);
+    setRoute('calendar');setToast({tone:'sync',title:'นัดรับใหม่ · เพิ่มลง Google Calendar แล้ว',description:(m.name||'ลูกค้า')+' · '+m.item+' · '+m.shop+' '+m.time+(day<0?' (นอกสัปดาห์ที่แสดง)':'')});};
+    window.addEventListener('message',h);return()=>window.removeEventListener('message',h);},[]);
+  const msg={ready:['sync','แจ้งลูกค้าแล้ว: สินค้าพร้อมรับ','อัปเดตใน Google Calendar แล้ว'],completed:['success','บันทึกว่ารับสินค้าแล้ว',null],cancelled:['info','ยกเลิกนัดรับแล้ว','ลบออกจาก Google Calendar แล้ว']};
+  const update=a=>{setAppts(p=>p.map(x=>x.id===a.id?a:x));const m=msg[a.status];if(m)setToast({tone:m[0],title:m[1],description:m[2]||undefined});};
+  const create=()=>{const day=Number(nf.day);setAppts(p=>[...p.map(x=>({...x,isNew:false})),{id:Date.now(),day,start:nf.time,mins:30,item:nf.item.trim()||'สินค้า',order:'',shop:nf.shop,customer:nf.name.trim()||'ลูกค้าใหม่',status:'pending',synced:true,phone:'—',email:'',code:String(Math.floor(1000+Math.random()*9000)),isNew:true}]);
+    setNewOpen(false);setNf({...nf,name:'',item:''});setRoute('calendar');setToast({tone:'sync',title:'สร้างนัดรับและเพิ่มลงปฏิทินแล้ว',description:D.shops[nf.shop].short+' · '+D.week[day].d+' '+D.week[day].n+' พ.ย. · '+nf.time});};
+  const up=k=>e=>setNf({...nf,[k]:e.target.value});
+  return <div style={{display:'flex',minHeight:'100vh',background:'var(--bg-app)'}}>
+    <Sidebar route={route} onRoute={setRoute} pending={appts.filter(a=>a.status==='pending').length}/>
+    <main style={{flex:1,minWidth:0}}>
+      {route==='calendar'&&<CalendarScreen appts={appts} onOpen={setOpen} onNew={()=>setNewOpen(true)}/>}
+      {route==='list'&&<ListScreen appts={appts} onOpen={setOpen} onUpdate={update}/>}
+      {route==='settings'&&<SettingsScreen sync={sync} setSync={setSync}/>}
+      {route==='shops'&&<Placeholder title="ร้านค้า"/>}{route==='customers'&&<Placeholder title="ลูกค้า"/>}
+    </main>
+    <AppointmentDialog appt={open} onClose={()=>setOpen(null)} onUpdate={update}/>
+    <Dialog open={newOpen} title="สร้างนัดรับใหม่" description="นัดรับจะถูกเพิ่มลง Google Calendar อัตโนมัติ" onClose={()=>setNewOpen(false)} footer={<><Button variant="secondary" onClick={()=>setNewOpen(false)}>ยกเลิก</Button><Button iconLeft="calendar-plus" onClick={create}>สร้างนัดรับ</Button></>}>
+      <div style={{display:'flex',flexDirection:'column',gap:14}}>
+        <Select label="ร้านค้า" iconLeft="store" value={nf.shop} onChange={up('shop')} options={Object.entries(D.shops).map(([k,s])=>({value:k,label:s.name}))}/>
+        <Input label="สินค้าที่จะรับ" iconLeft="package" placeholder="พิมพ์สินค้า เช่น เค้กวันเกิด 2 ปอนด์" value={nf.item} onChange={up('item')}/>
+        <Input label="ชื่อลูกค้า" placeholder="ชื่อ-นามสกุล" value={nf.name} onChange={up('name')}/>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}><Select label="วันที่" iconLeft="calendar" value={nf.day} onChange={up('day')} options={D.week.map((w,i)=>({value:String(i),label:w.d+' '+w.n+' พ.ย.'}))}/><Select label="เวลารับ" iconLeft="clock" value={nf.time} onChange={up('time')} options={['10:00','11:00','13:00','14:00','15:00','16:00','17:00']}/></div></div></Dialog>
+    {toast&&<div style={{position:'fixed',right:24,bottom:24,zIndex:60}}><Toast {...toast} onClose={()=>setToast(null)}/></div>}
+  </div>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script></body></html>
