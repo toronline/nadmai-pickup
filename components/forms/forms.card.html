@@ -1,0 +1,21 @@
+<!-- @dsCard group="Components" viewport="700x380" name="Forms" subtitle="Input, Textarea, Select, Checkbox, Radio, Switch" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script></head><body style="background:#fff;padding:20px"><div id="root"></div>
+<script type="text/babel">
+const DS=window.NadmaiDesignSystem_0c4e36;
+const {Input,Textarea,Select,Checkbox,Radio,Switch}=DS;
+ReactDOM.createRoot(document.getElementById('root')).render(<div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:18}}>
+<Input label="ชื่อ-นามสกุล" placeholder="เช่น สมชาย ใจดี" required/>
+<Input label="เบอร์โทรศัพท์" type="tel" iconLeft="phone" defaultValue="08-123" error="กรุณากรอกเบอร์ให้ครบ 10 หลัก"/>
+<Select label="แจ้งเตือนก่อน" iconLeft="bell" options={['15 นาที','30 นาที','1 ชั่วโมง','1 วัน']} defaultValue="30 นาที"/>
+<Input label="อีเมล" type="email" iconLeft="mail" placeholder="you@gmail.com" hint="ใช้รับคำเชิญ Google Calendar"/>
+<Textarea label="หมายเหตุ (ไม่บังคับ)" rows={2} placeholder="แจ้งร้านล่วงหน้า"/>
+<div style={{display:'flex',flexDirection:'column',gap:14}}>
+<Switch label="ซิงก์ Google Calendar" description="เพิ่มนัดลงปฏิทินอัตโนมัติ" defaultChecked/>
+<Checkbox label="ส่ง SMS แจ้งเตือน" defaultChecked/>
+<Radio direction="row" defaultValue="shop" options={[{value:'shop',label:'ที่ร้าน'},{value:'video',label:'วิดีโอคอล'}]}/>
+</div></div>);
+</script></body></html>
